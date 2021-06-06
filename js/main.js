@@ -5,31 +5,31 @@ var uniforms;
 
 function init() {
   // basic setup
-  container = document.getElementById( 'container' );
-  camera = new THREE.Camera();
-  camera.position.z = 1;
-  scene = new THREE.Scene();
-  var geometry = new THREE.PlaneBufferGeometry( 2, 2 );
-
+  lastUpdate = new Date().getTime();
+  canvas = document.getElementById('canvas');
   // shader stuff
   uniforms = {
     time: { type: "f", value: 1.0 },
     resolution: { type: "v2", value: new THREE.Vector2() }
   };
+  
+  camera = new THREE.Camera();
+  camera.position.z = 1;
+  scene = new THREE.Scene();
+
+  var geometry = new THREE.PlaneBufferGeometry( 2, 2 );  
   var material = new THREE.ShaderMaterial( {
     uniforms: uniforms,
     vertexShader: document.getElementById( 'vertexShader' ).textContent,
     fragmentShader: document.getElementById( 'fragmentShader' ).textContent
   } );
-  lastUpdate = new Date().getTime();
-
-  // put it together for rendering
   var mesh = new THREE.Mesh( geometry, material );
-  scene.add( mesh );
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio( window.devicePixelRatio / 2 );
-  container.appendChild( renderer.domElement );
+  scene.add(mesh);
   
+  //renderer
+  renderer = new THREE.WebGLRenderer({ canvas: canvas });
+  renderer.setPixelRatio( window.devicePixelRatio / 2 );
+ 
   // event listeners
   onWindowResize();
   window.addEventListener( 'resize', onWindowResize, false);
